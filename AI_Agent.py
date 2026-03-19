@@ -4,10 +4,10 @@ from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage, AIMessage, BaseMessage
 from langchain_core.tools import tool
 from langchain.agents import create_agent
-
 from dotenv import load_dotenv
 
 load_dotenv()
+
 
 @tool
 def write_json(filepath: str, data: Any) -> str:
@@ -18,6 +18,7 @@ def write_json(filepath: str, data: Any) -> str:
         return f"Successfully wrote JSON data to '{filepath}' ({len(json.dumps(data))} characters)."
     except Exception as e:
         return f"Error writing JSON: {str(e)}"
+
 
 @tool
 def read_json(filepath: str) -> str:
@@ -33,6 +34,7 @@ def read_json(filepath: str) -> str:
     except Exception as e:
         return f"Error reading JSON: {str(e)}"
 
+
 TOOLS = [write_json, read_json]
 
 llm = ChatOpenAI(model="gpt-5-mini", temperature=0)
@@ -46,6 +48,7 @@ SYSTEM_PROMPT = (
 
 agent = create_agent(llm, TOOLS, system_prompt=SYSTEM_PROMPT)
 
+
 def run_agent(user_input: str, history: List[BaseMessage]) -> AIMessage:
     """Single-turn agent runner with automatic tool execution via LangGraph."""
     try:
@@ -57,9 +60,10 @@ def run_agent(user_input: str, history: List[BaseMessage]) -> AIMessage:
     except Exception as e:
         return AIMessage(content=f"Error: {str(e)}\n\nPlease try rephrasing your request or provide more specific details.")
 
+
 if __name__ == "__main__":
     print(
-f"""{"=" * 60}
+        f"""{"=" * 60}
 DupeRemove Agent - Duplicated Data Remover
 {"=" * 60}
 Removes and fixes duplicated data in JSONs.
